@@ -1,0 +1,3 @@
+Criando banco de dados:
+
+create database "database_daniel";
