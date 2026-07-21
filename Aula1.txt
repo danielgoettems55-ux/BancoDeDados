@@ -36,3 +36,9 @@ create table tb_cliente(
 	tx_senha varchar(30) not null,
 	dt_cadastro timestamp
 );
+
+
+
+
+
+
