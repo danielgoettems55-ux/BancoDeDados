@@ -1,3 +1,38 @@
 Criando banco de dados:
 
 create database "database_daniel";
+
+===================================
+
+Criação das tabelas:
+
+create table tb_produto(
+	id_produto serial primary key not null,
+	tx_nome varchar(80) not null,
+	nv_quantidade int,
+	vl_preco numeric(18,3) not null,
+	tx_descricao varchar(100) not null,
+	tx_fornecedor varchar(30) not null
+);
+
+------------------------------------
+
+create table tb_venda(
+	id_venda serial not null,
+	cd_produto integer references tb_produto(id_produto),
+	cd_cliente integer references tb_cliente(id_cliente)
+	dt_venda timestamp
+);
+
+-------------------------------------
+
+create table tb_cliente(
+	id_cliente serial primary key not null ,
+	tx_nome varchar(80) not null,
+	nr_idade numeric(18,0),
+	tx_numerotelefone varchar(15) not null,
+	tx_cpf varchar(11) not null,
+	tx_email varchar(80) not null,
+	tx_senha varchar(30) not null,
+	dt_cadastro timestamp
+);
