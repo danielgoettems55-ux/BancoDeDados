@@ -9,7 +9,7 @@ Criação das tabelas:
 create table tb_produto(
 	id_produto serial primary key not null,
 	tx_nome varchar(80) not null,
-	nv_quantidade int,
+	nr_quantidade int,
 	vl_preco numeric(18,3) not null,
 	tx_descricao varchar(100) not null,
 	tx_fornecedor varchar(30) not null
