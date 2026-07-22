@@ -1,0 +1,92 @@
+Inserção de valores nas tabelas:
+
+
+insert into tb_cliente(tx_nome, nr_idade,nr_telefone,tx_cpf,tx_email, tx_senha)
+values ('Daniel',18,49991167965, '15173974990', 'daniel@gmial.com', '1234');
+
+insert into tb_cliente(tx_nome, nr_idade,nr_telefone,tx_cpf,tx_email, tx_senha)
+values ('Emerson',18, 49991437978, '74934759009', 'emersonRodrigues@gmial.com', '5543');
+
+insert into tb_cliente(tx_nome, nr_idade,nr_telefone,tx_cpf,tx_email, tx_senha)
+values ('Samuel',94,49991469065, '15173974341', 'samuelll@gmial.com', '913243');
+
+insert into tb_cliente(tx_nome, nr_idade,nr_telefone,tx_cpf,tx_email, tx_senha)
+values ('Artur',16,49991999999, '15345009812', 'petryartur@gmial.com', 'art123');
+
+-----------------------------------------------------------------------------------
+
+Recriação tabela cliente:
+
+ create table tb_cliente(
+	id_cliente serial primary key not null,
+	tx_nome varchar(80) not null,
+	nr_telefone numeric(18,0) not null,
+	nr_idade numeric(18,0) not null,
+	tx_cpf varchar(11) not null,
+	tx_email varchar(50) not null,
+	tx_senha varchar(30) not null,
+	dt_data timestamp default current_date
+ );
+
+-----------------------------------------------------------------------------------
+
+Exibir todos os itens de uma tabela:
+
+select * from tb_cliente
+
+-----------------------------------------------------------------------------------
+
+Criação da tabela calculadora:
+
+create table tb_calculadora(
+	id_calculadora serial primary key not null,
+	vl_valor numeric(18,2) not null,
+	tx_operacao varchar(1) not null
+);
+
+-----------------------------------------------------------------------------------
+
+Adicionando valores e a operação: 
+
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (2, '+');
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (99, '+');
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (999, '+');
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (67, '+');
+
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (6, '-');
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (20, '-');
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (50, '-');
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (85, '-');
+
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (1, '*');
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (7, '*');
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (9, '*');
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (8, '*');
+
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (99, '/');
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (10, '/');
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (9040, '/');
+insert into tb_calculadora(vl_valor,tx_operacao)
+values (8323, '/');
+
+-----------------------------------------------------------------------------------
+
+"Calculadora":
+
+select sum(vl_valor) from tb_calculadora
+where tx_operacao = '+';
