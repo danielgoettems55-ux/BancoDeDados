@@ -1,0 +1,43 @@
+Atividade para criar tokens de privilégio
+
+create table tb_usuario(
+	id_usuario serial,
+	cd_privilegio integer not null,
+	tx_email varchar(255) not null,
+	tx_senha varchar (255) not null,
+
+	constraint pk_tb_usuario primary key (id_usuario),
+	constraint fk_tb_privilegio_id_prilegio foreign key (cd_privilegio) references tb_privilegio(id_privilegio)
+)
+
+create table tb_privilegio(
+	id_privilegio serial not null,
+	tx_nome varchar(255) not null,
+
+	constraint pk_tb_privilegio primary key (id_privilegio)
+)
+insert into tb_usuario(cd_privilegio, tx_email, tx_senha) values (1,'fkahkfgs@fkdshfks', 'fsasadu')
+insert into tb_usuario(cd_privilegio, tx_email, tx_senha) values (2,'ghdgfd@gfgfs', 'ggfdgdf')
+insert into tb_usuario(cd_privilegio, tx_email, tx_senha) values (1,'hythhtks@ffdsf', '873467')
+insert into tb_usuario(cd_privilegio, tx_email, tx_senha) values (1,'fkah4234erkfgs@fkd423rewshfks', '534')
+insert into tb_usuario(cd_privilegio, tx_email, tx_senha) values (1,'54525fkahkfgs@f4234kdshfks', '53454')
+insert into tb_usuario(cd_privilegio, tx_email, tx_senha) values (3,'fk52323ahkfgs@f423kdshfks', '64rdg')
+insert into tb_usuario(cd_privilegio, tx_email, tx_senha) values (2,'fkahr24523kfgs@sdffsd', 'fsa635sadu')
+insert into tb_usuario(cd_privilegio, tx_email, tx_senha) values (2,'fka23425hkfgs@fkdsrsgdghfks', '654yfd')
+insert into tb_usuario(cd_privilegio, tx_email, tx_senha) values (1,'5345kfgs@fk5345dshfks', '5436ghdf')
+insert into tb_usuario(cd_privilegio, tx_email, tx_senha) values (3,'654gdsgs@fk5345pdtgwshfks', '5436ghdf')
+
+insert into tb_privilegio(tx_nome) values ('ADM')
+insert into tb_privilegio(tx_nome) values ('Cliente')
+insert into tb_privilegio(tx_nome) values ('Cliente')
+
+=============================================================================================================
+
+Exibir cargo de privilegio
+
+select 
+* 
+from tb_usuario
+inner join tb_privilegio on
+			tb_privilegio.id_privilegio = 
+				tb_usuario.cd_privilegio

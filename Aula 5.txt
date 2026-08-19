@@ -1,0 +1,92 @@
+Criar um relatório para exibir todos os cursos e professores:
+
+select tx_nome from tb_curso;
+select tx_nome from tb_professor; 
+
+
+select * from tb_curso;
+select * from tb_professor; 
+==================================================================
+
+Tabelas juntadas:
+
+Professor e disciplina:
+
+select * from tb_professor inner join tb_disciplina on
+tb_disciplina.cd_professor = tb_professor.id_professor;
+
+Aluno e curso:
+
+select * from tb_aluno  inner join tb_curso on 
+tb_aluno.cd_curso  = tb_curso.id_curso; 
+
+Aluno, curso e notas:
+
+select
+	tb_aluno.tx_nome,
+	tb_nota.vl_nota_1,
+	tb_nota.vl_nota_2,
+	tb_nota.vl_nota_3,
+	tb_curso.tx_nome
+	
+from
+	tb_aluno
+inner join tb_curso on
+	tb_aluno.cd_curso = tb_curso.id_curso
+inner join tb_matricula on
+	tb_matricula.cd_aluno = tb_aluno.id_aluno
+inner join tb_nota on
+	tb_nota.cd_matricula = tb_matricula.id_matricula;
+
+Exibir notas maior que 9
+
+select
+	tb_aluno.tx_nome,
+	tb_nota.vl_nota_1,
+	tb_nota.vl_nota_2,
+	tb_nota.vl_nota_3,
+	tb_curso.tx_nome
+	
+from
+	tb_aluno
+inner join tb_curso on
+	tb_aluno.cd_curso = tb_curso.id_curso
+inner join tb_matricula on
+	tb_matricula.cd_aluno = tb_aluno.id_aluno
+inner join tb_nota on
+	tb_nota.cd_matricula = tb_matricula.id_matricula
+	
+	where 
+	tb_nota.vl_nota_1 >= 9;
+
+Or e And:
+
+select
+	tb_aluno.tx_nome,
+	tb_nota.vl_nota_1,
+	tb_nota.vl_nota_2,
+	tb_nota.vl_nota_3,
+	tb_curso.tx_nome
+	
+from
+	tb_aluno
+inner join tb_curso on
+	tb_aluno.cd_curso = tb_curso.id_curso
+inner join tb_matricula on
+	tb_matricula.cd_aluno = tb_aluno.id_aluno
+inner join tb_nota on
+	tb_nota.cd_matricula = tb_matricula.id_matricula
+	
+	where 
+	(
+	(tb_nota.vl_nota_1 >= 9
+	and tb_nota.vl_nota_2 >8)
+	or tb_nota.vl_nota_1 < 7);
+
+---------
+
+select tx_nome from tb_curso
+	where 
+		tb_curso.id_curso = 4 
+		or 
+		tb_curso.id_curso = 2;
