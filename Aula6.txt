@@ -1,0 +1,81 @@
+Atividades da aula
+
+--1
+select tx_nome, tx_cidade from tb_aluno  
+	order by tx_cidade asc;
+
+--2
+select 
+		tb_nota.vl_nota 
+	from tb_aluno
+		inner join tb_matricula on 	
+			tb_aluno.id_aluno = tb_matricula.id_aluno 
+				inner join tb_nota on 
+					tb_matricula.id_matricula = tb_nota.id_matricula 
+						order by vl_nota desc;
+
+--3
+select tx_nome, tx_cidade from tb_aluno 
+	inner join tb_matricula on 
+		tb_aluno.id_aluno = tb_matricula.id_aluno
+			order by tx_cidade asc;
+
+--4
+select * from tb_turma
+	left join tb_matricula on
+		tb_turma.id_turma = tb_matricula.id_turma 
+			left join tb_nota on
+				tb_nota.id_matricula = tb_matricula.id_matricula
+					where id_nota is NULL;
+
+--5
+select tx_nome from tb_aluno 
+	left  join tb_matricula on
+		tb_aluno.id_aluno = tb_matricula.id_aluno
+			where tb_matricula.id_aluno is null
+				order by tx_nome asc;
+
+--6
+select  tx_nome from tb_aluno 
+	where LOWER(tx_cidade) = LOWER('Chapecó')
+		order by tx_nome;
+
+--7
+select tx_nome, vl_nota from tb_aluno
+	inner join tb_matricula on
+	 	tb_aluno.id_aluno = tb_matricula.id_aluno
+	 		inner join tb_nota on
+	 			tb_matricula.id_matricula = tb_nota.id_matricula 
+	 				where vl_nota in (5,3,7,9); 
+--8
+select count(vl_nota) from tb_turma
+	inner join tb_matricula on
+		tb_turma.id_turma = tb_matricula.id_turma 
+			inner join tb_nota on
+				tb_matricula.id_matricula = tb_nota.id_matricula 
+
+--9
+select count(id_aluno), tx_cidade from tb_aluno 
+	group by tx_cidade;
+
+--10
+
+select tb_professor.id_professor, count(tb_aluno.id_aluno) from tb_aluno 
+	inner join tb_matricula on 	
+		tb_aluno.id_aluno = tb_matricula.id_aluno 
+			inner join tb_turma on 
+				tb_turma.id_turma = tb_matricula.id_turma
+					inner join tb_curso on
+						tb_curso.id_curso = tb_turma.id_curso
+							inner join tb_disciplina on
+								tb_disciplina.id_curso = tb_curso.id_curso 
+									inner join tb_professor on
+										tb_professor.id_professor = tb_disciplina.id_professor
+											group by tb_professor.id_professor;
+
+					
+	
+
+	
+
+	
