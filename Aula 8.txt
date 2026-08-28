@@ -1,0 +1,87 @@
+--1
+select cliente.
+tx_nome, 
+email.tx_contato,
+telefone.tx_contato,
+telefone2.tx_contato 
+from 
+	tb_cliente cliente 
+		inner join tb_contato email  on 
+			cliente.id_cliente = email.cd_cliente
+			and email.cd_tipo_contato = 1
+		inner join tb_contato telefone  on 
+			cliente.id_cliente = telefone.cd_cliente
+			and telefone.cd_tipo_contato = 2
+		inner join tb_contato telefone2  on 
+			cliente.id_cliente = telefone2.cd_cliente
+			and telefone2.cd_tipo_contato = 3;
+
+
+--2
+select 
+cliente.tx_nome, 
+email.tx_contato
+from
+	tb_cliente cliente
+		left join tb_contato email on
+			cliente.id_cliente = email.cd_cliente 
+			and email.cd_tipo_contato = 1 
+			or email.cd_tipo_contato is null
+				order by tx_nome asc;
+
+--3
+
+select
+cliente.tx_nome,
+comentario.tx_comentario,
+nota.nr_nota,
+produto.tx_descricao
+from tb_cliente cliente
+	inner join tb_avaliacao comentario on 
+	cliente.id_cliente = comentario.cd_cliente
+	inner join tb_avaliacao nota on 
+	cliente.id_cliente = nota.cd_cliente
+	inner join tb_produto produto on 
+	nota.id_avaliacao = produto.cd_categoria;
+
+--4
+
+select 
+cliente.tx_nome,
+cliente.nr_idade
+from tb_cliente cliente
+	where cliente.nr_idade > (select 
+sum(cliente.nr_idade) /
+count(cliente.id_cliente) as media
+from tb_cliente cliente); 
+
+--5
+ 
+select 
+tipo.tx_descricao,
+count(contato.cd_cliente)
+from tb_contato contato
+	inner join tb_tipo_contato tipo on
+		contato.cd_tipo_contato = tipo.id_tipo_contato
+			group by tipo.tx_descricao;
+
+--6
+
+select 
+	cliente.tx_nome,
+	vendaa.dt_venda 
+from tb_cliente cliente
+	inner join tb_venda vendaa on
+		cliente.id_cliente = vendaa.cd_cliente
+			where exists (select 
+						1 
+					from tb_venda venda
+						where tx_status = 'PAGO'
+							and venda.cd_cliente = vendaa.cd_cliente  
+							group by cd_cliente, dt_venda
+								order by dt_venda asc
+									limit 1
+			
+			);
+			
+	
