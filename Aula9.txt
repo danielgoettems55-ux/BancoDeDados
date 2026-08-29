@@ -1,0 +1,24 @@
+--7
+			
+with receitaBruta as (
+select
+	 sum(nr_quantidade * vl_unitario) as valor,
+	 count(cd_empresa) as quantidadeVendas,
+	 cd_empresa as polenta
+from tb_item_venda itVenda
+	inner join tb_venda venda on
+	itVenda.id_item_venda  = venda.id_venda
+	where venda.tx_status = 'PAGO'
+	group by cd_empresa 
+)
+select 
+	empresa.tx_razao_social,
+	empresa.id_empresa 
+	from tb_empresa empresa
+	inner join receitaBruta on receitaBruta.polenta = empresa.id_empresa 
+				where quantidadeVendas > 3 and receitaBruta.valor > 10000
+					order by receitaBruta.valor desc;			
+	
+
+
+
