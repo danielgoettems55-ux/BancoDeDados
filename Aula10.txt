@@ -1,0 +1,55 @@
+ -- 9
+
+select 
+tx_nome 
+from tb_cliente
+	where upper(tx_nome) like 'A%' or upper(tx_nome) like '%O';
+
+-- 8
+with 
+vendaClientes as(
+select
+	sum(itemVenda.vl_unitario * itemVenda.nr_quantidade ) as totalVenda,
+	venda.cd_cliente  as codigo
+from  tb_venda venda  
+			inner join tb_item_venda itemVenda on
+			venda.id_venda = itemVenda.cd_venda 
+group by cd_cliente
+),
+media as(
+	select 
+		sum(vendaClientes.totalVenda) / count(codigo) as valor
+	from vendaClientes 
+)
+select 
+	tx_nome
+from tb_cliente clientes
+	inner join vendaClientes on vendaClientes.codigo = clientes.id_cliente
+	inner join media on vendaClientes.totalvenda > media.valor;
+
+-- 10
+
+with estoque as (
+select
+cd_categoria,
+sum(nr_estoque ) / count(id_produto )
+as media
+from
+tb_produto
+group by cd_categoria
+)
+select
+produto.tx_descricao ,
+cat.tx_descricao,
+produto.nr_estoque,
+estoque.media,
+estoque.media - produto.nr_estoque as diferenca
+from
+tb_produto produto
+inner join tb_categoria cat on
+cat.id_categoria = produto.cd_categoria
+inner join estoque on
+estoque.cd_categoria = produto.cd_categoria
+where
+estoque.media > produto.nr_estoque
+
