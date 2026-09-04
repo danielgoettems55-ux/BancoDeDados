@@ -1,0 +1,71 @@
+
+funcao totalGasto(){
+ return todos as compras, todos os gastos, todos os clientes
+}
+
+
+if(cliente = 18){
+	retorna = compra
+}
+
+funcao totalGasto(codigoCliente){
+	if(cliente = 18){
+		retorna = compra
+	}
+}
+
+
+funcao totalGasto(){
+return [ com todos os produtos]
+}
+
+chama funcao totalGasto
+fazer for
+	if
+
+		
+
+
+with 
+totalGasto as (
+select
+	sum(itemVenda.nr_quantidade * itemVenda.vl_unitario) as vl_totalGasto,
+	count(distinct itemVenda.cd_venda) as nr_compras,
+	min(venda.dt_venda) as dtMin,
+	max(venda.dt_venda)as dtMax,
+	venda.cd_cliente,
+	venda.tx_status
+from tb_item_venda itemVenda
+	inner join tb_venda venda on venda.id_venda = itemVenda.cd_venda 
+	group by venda.cd_cliente,venda.tx_status
+)
+select 
+cliente.tx_nome,
+tx_cidade,
+nr_compras,
+totalgasto.vl_totalGasto,
+totalgasto.dtmax,
+dtmin,
+totalgasto.tx_status, case 
+		when totalgasto.nr_compras < 1 then 'CLIENTE PEQUENO'
+		when totalgasto.nr_compras = 1 then 'CLIENTE MEDIO'
+		when totalgasto.nr_compras = 2 then 'CLIENTE GRANDE'
+	else 'OUTROS'
+	end,
+	(
+	select 
+		produto.tx_nome 
+	from tb_venda venda
+		inner join tb_item_venda itemVenda on itemVenda.cd_venda = venda.id_venda 
+		inner join tb_produto produto on itemVenda.cd_produto = produto.id_produto 
+	where venda.cd_cliente  = cliente.id_cliente
+	group by produto.id_produto , produto.tx_nome 
+	order by sum(itemVenda.nr_quantidade) desc
+	limit 1
+	)
+from tb_cliente cliente
+	inner join totalGasto on totalgasto.cd_cliente = cliente.id_cliente 
+	inner join tb_endereco endereco on endereco.id_endereco = cliente.cd_endereco 
+	where Upper(tx_status) = 'PAGO'
+	
+
