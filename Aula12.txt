@@ -1,0 +1,167 @@
+drop table tb_atividade;
+
+create table tb_atividade(
+tx_nome varchar(255) not null,
+tx_cidade varchar(255) not null,
+nr_compras numeric(18,0) not null,
+vl_totalgasto numeric(16,0) not null,
+dt_max timestamp not null,
+dt_min timestamp not null,
+tx_status varchar(255),
+tx_produto varchar(255)
+);
+
+insert into tb_atividade(
+tx_nome, 
+tx_cidade, 
+nr_compras, 
+vl_totalgasto, 
+dt_max, 
+dt_min, 
+tx_status,
+tx_produto)
+values
+('Ana Souza','Chapecó',2,8579.77,'2024-03-22 13:30:00.000','2024-01-10 09:30:00.000','CLIENTE GRANDE', 'Mouse Multilaser')
+
+insert into tb_atividade(
+tx_nome, 
+tx_cidade, 
+nr_compras, 
+vl_totalgasto, 
+dt_max, 
+dt_min, 
+tx_status,
+tx_produto)
+values
+('Bruno Lima','Florianópolis',2,12649.77,'2024-06-12 11:00:00.000','2024-01-15 14:00:00.000','CLIENTE GRANDE', 'iPhone 15')
+
+insert into tb_atividade(
+tx_nome, 
+tx_cidade, 
+nr_compras, 
+vl_totalgasto, 
+dt_max, 
+dt_min, 
+tx_status,
+tx_produto)
+values
+('Carla Mendes','Joinville',1,9299.98,'2024-02-03 11:15:00.000','2024-02-03 11:15:00.000','CLIENTE MEDIO', 'iPhone 15')
+
+insert into tb_atividade(
+tx_nome, 
+tx_cidade, 
+nr_compras, 
+vl_totalgasto, 
+dt_max, 
+dt_min, 
+tx_status,
+tx_produto)
+values
+('Eva Costa','Porto Alegre',1,6799.98,'2024-03-05 10:00:00.000','2024-03-05 10:00:00.000','CLIENTE MEDIO', 'LG OLED 55')
+
+insert into tb_atividade(
+tx_nome, 
+tx_cidade, 
+nr_compras, 
+vl_totalgasto, 
+dt_max, 
+dt_min, 
+tx_status,
+tx_produto)
+values
+('Gabriela Pinto','Chapecó',1,7299.98,'2024-04-18 15:20:00.000','2024-04-18 15:20:00.000','CLIENTE MEDIO', 'AirPods Pro')
+
+insert into tb_atividade(
+tx_nome, 
+tx_cidade, 
+nr_compras, 
+vl_totalgasto, 
+dt_max, 
+dt_min, 
+tx_status,
+tx_produto)
+values
+('Henrique Alves','Blumenau',1,4299.97,'2024-05-07 10:45:00.000','2024-05-07 10:45:00.000','CLIENTE MEDIO', 'Samsung SSD 1TB')
+
+insert into tb_atividade(
+tx_nome, 
+tx_cidade, 
+nr_compras, 
+vl_totalgasto, 
+dt_max, 
+dt_min, 
+tx_status,
+tx_produto)
+values
+('Isabela Rocha','Joinville',1,10269.68,'2024-05-30 14:00:00.000','2024-05-30 14:00:00.000','CLIENTE MEDIO', 'Mouse Multilaser')
+
+=========================================================================================
+
+create table tb_atividade_modo_2 as(
+with 
+totalGasto as (
+select
+	sum(itemVenda.nr_quantidade * itemVenda.vl_unitario) as vl_totalGasto,
+	count(distinct itemVenda.cd_venda) as nr_compras,
+	min(venda.dt_venda) as dtMin,
+	max(venda.dt_venda)as dtMax,
+	venda.cd_cliente,
+	venda.tx_status
+from tb_item_venda itemVenda
+	inner join tb_venda venda on venda.id_venda = itemVenda.cd_venda 
+	group by venda.cd_cliente,venda.tx_status
+)
+select 
+cliente.tx_nome,
+tx_cidade,
+nr_compras,
+totalgasto.vl_totalGasto,
+totalgasto.dtmax,
+dtmin,
+totalgasto.tx_status, case 
+		when totalgasto.nr_compras < 1 then 'CLIENTE PEQUENO'
+		when totalgasto.nr_compras = 1 then 'CLIENTE MEDIO'
+		when totalgasto.nr_compras = 2 then 'CLIENTE GRANDE'
+	else 'OUTROS'
+	end,
+	(
+	select 
+		produto.tx_nome 
+	from tb_venda venda
+		inner join tb_item_venda itemVenda on itemVenda.cd_venda = venda.id_venda 
+		inner join tb_produto produto on itemVenda.cd_produto = produto.id_produto 
+	where venda.cd_cliente  = cliente.id_cliente
+	group by produto.id_produto , produto.tx_nome 
+	order by sum(itemVenda.nr_quantidade) desc
+	limit 1
+	) as algumacoisa
+from tb_cliente cliente
+	inner join totalGasto on totalgasto.cd_cliente = cliente.id_cliente 
+	inner join tb_endereco endereco on endereco.id_endereco = cliente.cd_endereco 
+	where Upper(tx_status) = 'PAGO')
+
+alter table tb_atividade 
+	add column nr_idade numeric(18,0);
+	
+alter table tb_produto 
+	add column vl_peso numeric(18,3);
+
+alter table tb_cliente 
+	add column tx_cnpj varchar(255);
+
+update tb_produto set vl_peso = 1 where id_produto = 12;
+select * from tb_produto;
+
+update tb_produto set vl_peso = (id_produto * vl_preco );
+select * from tb_produto;
+
+alter table tb_produto
+	add column tx_categoria varchar(255);
+
+update tb_produto set tx_categoria = (select tx_descricao from tb_categoria where cd_categoria =id_categoria);
+select * from tb_categoria;
+
+delete from tb_atividade 
+	where upper(tx_nome) = upper('Eva Costa');
+
+	
