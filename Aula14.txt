@@ -1,0 +1,37 @@
+update tb_produto set vl_preco = 1234.56 where upper(tx_nome) = upper('Notebook');
+
+update tb_produto set vl_preco = (vl_preco * 1.10) where upper(tx_nome) = upper('Smartphone');
+
+update tb_produto set nr_estoque = (nr_estoque -5) where upper(tx_nome) = upper('notebook');
+
+delete from tb_pedido  where id_pedido = 9;
+
+delete from tb_pedido where nr_quantidade < 3 and dt_pedido < '2024-02-01';
+
+select tv.tx_nome,
+		tp.nr_estoque 
+		from tb_produto tp 
+		inner join tb_categoria tv on tp.cd_categoria = tv.id_categoria 
+			where tp.fl_ativo is true;
+
+with catego as (
+select cat.tx_nome,
+		count(id_categoria) as total
+		from tb_produto tp 
+		inner join tb_categoria cat on tp.cd_categoria  = cat.id_categoria
+		group by cat.tx_nome
+)
+select * from catego where total > 2
+
+
+
+select cat.tx_nome,
+		count(id_categoria) as total
+		from tb_produto tp 
+		inner join tb_categoria cat on tp.cd_categoria  = cat.id_categoria
+		group by cat.tx_nome
+		having count(id_categoria) > 2
+		
+		
+		
+

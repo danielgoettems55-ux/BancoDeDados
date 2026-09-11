@@ -1,0 +1,10 @@
+select 
+	produto.tx_nome,
+	MIN(preco_historico.vl_preco_anterior ),
+	MAX(preco_historico.vl_preco_novo ),
+	preco_historico.dt_alteracao 
+from tb_produto produto
+	inner join tb_preco_historico preco_historico on preco_historico.cd_produto = produto.id_produto 
+	where preco_historico.dt_alteracao between '01-02-2024' and '30-03-2024'
+	group by produto.tx_nome, preco_historico.dt_alteracao ;
+	
