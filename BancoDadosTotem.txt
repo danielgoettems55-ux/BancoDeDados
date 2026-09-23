@@ -1,0 +1,72 @@
+create sequence sq_participante start 1 increment + 1;
+create sequence sq_historico_participante start 1 increment + 1;
+create sequence sq_pergunta start 1 increment + 1;
+create sequence sq_curso start 1 increment + 1;
+create sequence sq_resposta start 1 increment + 1;
+
+comment on sequence sq_participante is 'Sequencia de primary key participante';
+comment on sequence sq_historico_participante is 'Sequencia de primary key histórico de participante';
+comment on sequence sq_pergunta is 'Sequencia de primary key pergunta';
+comment on sequence sq_curso is 'Sequencia de primary key curso';
+comment on sequence sq_resposta is 'Sequencia de primary key resposta';
+
+create table tb_participante(
+	id_participante numeric(18,0) default nextval('sq_participante'),
+	tx_nome varchar(255) not null,
+	tx_email varchar(255) not null,
+	dt_cadastro timestamp default now(),
+	
+	constraint pk_participante primary key (id_participante)
+);
+drop table tb_participante motorola z3
+create table tb_historico_participante(
+	id_historico_participante numeric(18,0) default nextval('sq_historico_participante'),
+	cd_participante numeric(18,0) not null,
+	cd_pergunta integer not null,
+	cd_resposta integer not null,
+	nr_pontuacao numeric(18,0) not null,
+	dt_cadastro timestamp default now(),
+	
+	constraint pk_historico_participante primary key (id_historico_participante),
+	constraint fk_participante foreign key (cd_participante) references tb_participante(id_participante),
+	constraint fk_pergunta foreign key (cd_pergunta) references tb_pergunta(id_pergunta),
+	constraint fk_resposta foreign key (cd_resposta) references tb_resposta(id_resposta)
+
+);
+
+create table tb_pergunta (
+	id_pergunta numeric(18,0) default nextval('sq_pergunta'), 
+	tx_contexto BYTEA not null,
+	tx_pergunta BYTEA not null,
+	tx_capacidade varchar(255),
+	cd_curso integer not null,
+	tx_identificador varchar(30),
+	constraint pk_pegunta primary key (id_pergunta),
+	constraint fk_curso foreign key (cd_curso) references tb_curso(id_curso)	
+);
+
+create table tb_curso(
+	id_curso numeric(18,0) default nextval('sq_curso'), 
+	tx_nome varchar(255) not null,
+	
+	constraint pk_curso primary key(id_curso)
+);
+
+
+
+create table tb_resposta(
+	id_resposta numeric(18,0) default nextval('sq_resposta'), 
+	cd_pergunta integer,
+	tx_alternativa BYTEA,
+	fl_correto boolean,
+	
+	constraint pk_resposta primary key (id_resposta),
+	constraint fk_pergunta foreign key (cd_pergunta) references tb_pergunta(id_pergunta)	
+);
+
+
+
+
+
+
+
