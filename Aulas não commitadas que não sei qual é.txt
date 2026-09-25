@@ -1,0 +1,39 @@
+select tc.tx_nome,
+		max(tp.vl_preco), 
+		min(tp.vl_preco)
+from tb_categoria tc 
+	inner join tb_produto tp on tc.id_categoria = tp.cd_categoria 
+	group by tc.tx_nome;
+	 
+select tx_nome, 
+		sum(tpedido.nr_quantidade  * tp.vl_preco) as soma
+from tb_produto tp 
+	inner join tb_pedido tpedido on tp.id_produto = tpedido.cd_produto 
+	group by tx_nome
+	order by soma desc;
+
+alter table tb_produto add column cd_cliente integer,
+	add constraint cliente_pk foreign key(cd_cliente) references tb_cliente(id_cliente); 
+
+
+======================================================================================================
+
+create role perfil_leitura with login password 'leitura'
+
+grant select, insert, update on all tables in schema public to perfil_leitura;
+
+revoke all privileges on all tables in schema public from perfil_leitura;
+
+create role joana with login password '123';
+
+
+GRANT CREATE ON SCHEMA public TO joana;
+
+grant select on tb_cliente to joana;
+
+grant alter on all tables in schema public to joana;
+
+
+select * from tb_cliente
+
+create table tb_usuario(id_usuario numeric(18,0) ) 
