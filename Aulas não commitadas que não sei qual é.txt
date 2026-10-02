@@ -37,3 +37,20 @@ grant alter on all tables in schema public to joana;
 select * from tb_cliente
 
 create table tb_usuario(id_usuario numeric(18,0) ) 
+
+========================================================================================================
+
+create role perfil_leitura with login password 'leitura'
+
+grant select, insert, update on all tables in schema public to perfil_leitura;
+
+revoke all privileges on all tables in schema public from perfil_leitura;
+
+grant alter on all tables in schema public to joana;
+
+
+select * from tb_cliente
+
+create table tb_usuario(id_usuario numeric(18,0) ) 
+
+grant select, insert on tb_pedidos to perfil_atendimento;
