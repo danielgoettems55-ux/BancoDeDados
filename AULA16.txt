@@ -1,0 +1,68 @@
+
+create view vw_pedidos_usuarios as
+select
+		cd_usuario,
+		count(distinct pedido.id_pedido ) as qauntidade_pedido, 
+		sum(item.nr_quantidade),
+		sum((item.nr_quantidade * item.vl_unitario) - item.vl_desconto  ) as vl_liquido
+from tb_pedidos pedido
+inner join tb_itens_pedido item on pedido.id_pedido = item.cd_pedido
+where upper(pedido.tx_status) = upper('pago') and dt_pedido > (now() - interval '2 years') 
+group by cd_usuario
+having count(pedido.id_pedido ) > 3;
+
+
+create view clientes_destaques as
+with retorna_pedidos_negados as (
+		select count(id_pedido) as TotalCancelados,
+				cd_usuario
+		from tb_pedidos tp 
+		where upper(tp.tx_status) = upper('cancelado') 
+		group by cd_usuario 
+),
+media_geral as (
+	select 
+	avg(vl_total) as media
+	from tb_pedidos
+)
+select vw_pedidos_usuarios.cd_usuario,
+		tu.tx_nome,		
+		te.tx_uf,
+		rpn.TotalCancelados
+from vw_pedidos_usuarios
+inner join tb_usuarios tu on tu.id_usuario = vw_pedidos_usuarios.cd_usuario 
+inner join tb_enderecos te  on te.cd_usuario = vw_pedidos_usuarios.cd_usuario
+left join retorna_pedidos_negados rpn on rpn.cd_usuario = vw_pedidos_usuarios.cd_usuario 
+inner join media_geral mediaG on  vw_pedidos_usuarios.vl_liquido > mediaG.media 
+where tu.fl_ativo is true 
+
+
+create materialized view  clientes_destaquess as
+with retorna_pedidos_negados as (
+		select count(id_pedido) as TotalCancelados,
+				cd_usuario
+		from tb_pedidos tp 
+		where upper(tp.tx_status) = upper('cancelado') 
+		group by cd_usuario 
+),
+media_geral as (
+	select 
+	avg(vl_total) as media
+	from tb_pedidos
+)
+select vw_pedidos_usuarios.cd_usuario,
+		tu.tx_nome,		
+		te.tx_uf,
+		rpn.TotalCancelados
+from vw_pedidos_usuarios
+inner join tb_usuarios tu on tu.id_usuario = vw_pedidos_usuarios.cd_usuario 
+inner join tb_enderecos te  on te.cd_usuario = vw_pedidos_usuarios.cd_usuario
+left join retorna_pedidos_negados rpn on rpn.cd_usuario = vw_pedidos_usuarios.cd_usuario 
+inner join media_geral mediaG on  vw_pedidos_usuarios.vl_liquido > mediaG.media 
+where tu.fl_ativo is true;
+
+create index 
+	idx_
+
+
+
