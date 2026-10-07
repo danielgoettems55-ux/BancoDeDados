@@ -1,0 +1,96 @@
+create sequence sq_atividade start with 1 increment by 1;
+create sequence sq_atividade_log start with 1 increment by 1;
+create table tb_atividade(
+ id_atividade numeric(18,0) default nextval('sq_atividade') primary key,
+ tx_nome varchar(255),
+ dt_nascimento date,
+ tx_genero varchar(255)
+);
+insert into tb_atividade(tx_nome,dt_nascimento,tx_genero) values ('Ana Souza', '1995-04-12', 'Feminino');
+insert into tb_atividade(tx_nome,dt_nascimento,tx_genero) values ('Carlos Eduardo', '1988-11-23', 'Masculino');
+insert into tb_atividade(tx_nome,dt_nascimento,tx_genero) values ('Alex Silva', '2001-07-05', 'Não-binário');
+INSERT INTO tb_atividade (tx_nome, dt_nascimento, tx_genero) VALUES ('Fernanda Lima', '1994-08-25', 'Feminino');
+INSERT INTO tb_atividade (tx_nome, dt_nascimento, tx_genero) VALUES ('Rodrigo Santos', '1989-12-03', 'Masculino');
+INSERT INTO tb_atividade (tx_nome, dt_nascimento, tx_genero) VALUES ('Camila Rocha', '2002-04-17', 'Feminino');
+drop table tb_atividade
+
+create view vw_normal as(
+	select * from tb_atividade
+)
+
+create materialized view vw_materalizada as (
+	select * from tb_atividade
+)
+
+create table tb_atividade_log(
+	id_atividade_log numeric(18,0) default nextval('sq_atividade_log'),
+	tx_query varchar(800),
+	nr_quantidade numeric(18,0),
+	tx_mensagem varchar(255),
+	cd_atividade numeric(18,0)
+
+)
+drop function fn_nome
+create function fn_nome(valor numeric)
+returns varchar
+language plpgsql
+as $$
+begin	
+	if(valor > 18) then
+		return 'maior de idade';
+	elsif(valor = 18)then
+		return 'exatamento 18 anos';
+	else
+		return 'menor de idade';
+	end if;
+end
+$$;
+
+
+select  *, 
+		fn_nome(id_atividade),
+		fn_nome(50)
+from tb_atividade;
+
+select current_date , age(dt_nascimento),
+	extract(year from age(dt_nascimento))
+from tb_atividade;
+
+drop function fn_idade;
+create function fn_idade(dt_nascimento date)
+returns varchar
+language plpgsql
+as 
+$$
+declare
+	idade integer;
+begin
+	idade := extract(year from age(dt_nascimento) );
+	if(idade >18 ) then
+		return 'maior de idade';
+		
+	elsif(idade=18) then
+		return 'tem 18 anos';
+		
+	else
+		return 'menor de idade';
+	end if; 
+end
+$$
+
+select *, fn_idade(dt_nascimento) from tb_atividade
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
