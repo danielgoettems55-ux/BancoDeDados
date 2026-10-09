@@ -1,0 +1,118 @@
+create function calcular_desconto(vl_valor numeric, vl_desconto numeric)
+returns numeric
+language plpgsql
+as $$
+	declare 
+		porcentagem numeric;
+	begin
+		porcentagem = (vl_desconto / 100);
+		return (vl_valor * porcentagem)	;	
+	end
+$$
+
+select calcular_desconto(1000,20);
+
+create function fn_calculadora(vl_1 numeric, vl_2 numeric, operacao numeric)
+returns numeric
+language plpgsql
+as $$
+begin
+	if(operacao = 1) then
+	return (vl_1 + vl_2);
+	
+	elsif(operacao = 2) then
+	return (vl_1 - vl_2);
+	
+	elsif(operacao = 3) then
+	return (vl_1 * vl_2);
+	
+	else 
+	return (vl_1/vl_2);
+	
+	end if;	
+
+end
+$$
+
+select fn_calculadora(10,30,4)
+
+create function fn_caro(vl_valor numeric)
+returns varchar
+language plpgsql
+as $$
+begin
+ 	if(vl_valor < 50)then
+ 	return 'barato';
+ 	elsif(vl_valor < 100 and vl_valor > 50)then
+ 	return 'medio';
+ 	else
+ 	return 'caro';
+ 	end if;
+end
+
+$$
+
+select fn_caro(77)
+
+create function fn_dobro(vl_valor numeric)
+returns numeric
+language plpgsql
+as $$
+begin
+	return(vl_valor * 2);
+
+end
+$$
+
+select fn_dobro(2)
+
+create function fn_parImpar(vl_valor numeric)
+returns varchar
+language plpgsql
+as $$
+begin
+	if((vl_valor % 2) = 0) then
+	return 'Par';
+	else 
+	return 'Impar';
+	end if;
+
+end
+$$
+
+select fn_parImpar(3)
+
+create function fn_escola(vl_nota numeric)
+returns varchar
+language plpgsql
+as $$
+begin
+	if(vl_nota > 10)then
+	return 'Nota Inválida';
+	elsif(vl_nota > 7)then
+ 	return 'Aprovado';
+ 	elsif(vl_nota > 5 and vl_nota < 7)then
+ 	return 'Recuperação';
+ 	else
+ 	return 'Reprovado';
+ 	end if;
+end
+$$;
+select fn_escola()
+
+create function fn_log_atividade()
+returns trigger
+language plpgsql as $$
+	begin
+		insert into public.tb_atividade_log
+		(tx_query, nr_idade, tx_mensagem, cd_atividade)
+		values(null,null,null,null)
+	end;
+	
+
+
+create trigger tr_quando_atualizar_usuario
+before update on tb_usuario
+for each statement
+execute function funcao();
+
