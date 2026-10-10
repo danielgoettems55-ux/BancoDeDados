@@ -1,0 +1,78 @@
+create trigger nome
+	before
+	update on tb_atividade
+for each row
+	execute function atividade_log_update ();
+
+drop function atividade_log_update;
+create function atividade_log_update()
+returns trigger
+language plpgsql
+as $$
+	begin
+		insert into tb_atividadelog(tx_query, nr_idade, tx_mensagem, cd_atividade)
+		values(current_query(),
+		extract (years from age(
+		old.dt_nascimento)),
+		'Mensagem via trigger',
+		new.id_atividade
+		);
+		return new;
+	end;
+	$$
+
+select * from tb_atividade;
+
+update tb_atividade set 
+	dt_nascimento = '1999-12-14',
+	id_atividade=9
+where id_atividade =1 ;	
+
+
+create sequence sq_pagamentos_log start with 1 increment by 1;
+
+create table tb_pagamentos_log(
+	id_pagamentos_log numeric(18,0) default nextval('sq_pagamentos_log'),
+	tx_query varchar(800),
+	tx_forma varchar(255),
+	vl_valor_antes numeric(18,2),
+	vl_valor_depois numeric(18,2),
+	dt_modificacao date
+
+)
+
+create trigger trigger_foda
+before
+insert
+on tb_pagamentos
+for each row
+execute function fn_funcao_foda();
+
+create or replace function fn_funcao_foda()
+returns trigger
+language plpgsql
+as $$
+begin
+	insert into tb_pagamentos_log(tx_query, tx_forma, vl_valor_antes, vl_valor_depois, dt_modificacao)
+		values(current_query(),
+			lower(new.tx_forma),
+			old.vl_pagamento,
+			new.vl_pagamento,
+			now()		
+		);
+		
+		return new;
+end;
+$$;
+
+
+select * from tb_pagamentos_log 
+
+
+
+INSERT INTO public.tb_pagamentos
+(id_pagamento, cd_pedido, tx_forma, vl_pagamento, dt_pagamento)
+VALUES( nextval('sq_pagamento'), 11, 'DINHEIROOOOO', 9999998.000, '2024-11-26 20:11:16.992');
+
+
+
