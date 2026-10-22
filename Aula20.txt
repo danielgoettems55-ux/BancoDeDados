@@ -1,0 +1,43 @@
+create view  vw_produtos_mais_pedidos as
+select tp.id_produto as codigo , 
+tp.tx_descricao as descricao,    
+sum(tip.vl_unitario * tip.nr_quantidade ) as valorPago,
+max(tpp.dt_pedido) as maiorData,
+max(tpp.cd_usuario ) as maiorUsuario
+from tb_itens_pedido tip 
+inner join tb_produtos tp on tp.id_produto = tip.cd_produto
+inner join tb_pedidos tpp on tpp.id_pedido = tip.cd_pedido
+inner join tb_usuarios tbu on tpp.cd_usuario = tbu.id_usuario
+inner join tb_enderecos tbe on tbe.cd_usuario = tbu.id_usuario
+where upper(tpp.tx_status) = upper('pago')  and upper(tbe.tx_uf) = upper ('sc') and tpp.vl_total > 0
+group by codigo, descricao 
+limit 50
+
+select * from vw_pedidos_usuarios vpu --0.157 antes 0.154 = 1,94% de melhora
+
+create index idx_p
+vacuum fulledido_status on tb_pedidos(fl_pago, upper(tx_status));
+create index idx_endereco_usuario_estado on tb_enderecos(cd_usuario,upper(tx_uf));
+
+vacuum full;
+
+create or replace function estados(sigla varchar)
+return varchar
+language plpgsql
+$$
+begin
+	case upper(sigla)
+		when 'SC' then 'SANTA CATARINA'
+		when 'RJ' then 'RIO DE JANEIRO'
+		when 'SP' then 'SÃO PAULO'
+		when 'RS' then 'RIO GRANDE DO SUL'
+		when 'PR' then 'PARANA'
+	else 'NÃO DEFINIDO'
+	end;	
+end;
+$$;
+
+select tx_uf, status(tx_uf) from  tb_enderecos te 
+
+
+
